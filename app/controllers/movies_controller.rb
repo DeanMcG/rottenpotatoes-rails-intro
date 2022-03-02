@@ -10,12 +10,21 @@ class MoviesController < ApplicationController
     #byebug
     @all_ratings = Movie.all_ratings
     @ratings_to_show = ratings
-    @movies = Movie.with_ratings(ratings)
+    @sort_by = sort_by
+    @ratings_hash = ratings_hash
+    @movies = Movie.with_ratings(ratings, sort_by)
     
   end
 
+  def sort_by
+    params[:sort_by]
+  end
   def ratings
     params[:ratings]&.keys || Movie.all_ratings
+  end
+
+  def ratings_hash
+    params[:ratings]
   end
 
   def new

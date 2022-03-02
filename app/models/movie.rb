@@ -3,7 +3,7 @@ class Movie < ActiveRecord::Base
     ['G','PG','PG-13','R']
   end
 
-  def self.with_ratings(ratings)
-    Movie.where(rating: ratings)
+  def self.with_ratings(ratings, sort_by)
+    Movie.where(rating: ratings).order(sort_by)
   end
 end
