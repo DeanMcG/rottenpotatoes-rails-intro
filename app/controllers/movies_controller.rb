@@ -1,5 +1,6 @@
 class MoviesController < ApplicationController
 
+  before_action :force_index_redirect, only: [:index]
   def show
     id = params[:id] # retrieve movie ID from URI route
     @movie = Movie.find(id) # look up movie by unique ID
@@ -19,14 +20,23 @@ class MoviesController < ApplicationController
   end
 
   def sort_by
-    params[:sort_by] || session[:sort_by]
+    params[:sort_by] || session[:sort_by] || 'id'
   end
   def ratings
     params[:ratings]&.keys || session[:ratings] || Movie.all_ratings
   end
 
   def ratings_hash
-    params[:ratings]
+    # params[:ratings]
+    Hash[ratings.collect { |item| [item, "1"] }]
+  end
+
+  def force_index_redirect
+    if !params.key?(:ratings) || !params.key?(:sort_by)
+      flash.keep
+      url = movies_path(sort_by: sort_by, ratings: ratings_hash)
+      redirect_to url
+    end
   end
 
   def new
