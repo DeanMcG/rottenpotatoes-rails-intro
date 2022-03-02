@@ -13,14 +13,16 @@ class MoviesController < ApplicationController
     @sort_by = sort_by
     @ratings_hash = ratings_hash
     @movies = Movie.with_ratings(ratings, sort_by)
+    session[:ratings] = @ratings_to_show
+    session[:sort_by] = @sort_by
     
   end
 
   def sort_by
-    params[:sort_by]
+    params[:sort_by] || session[:sort_by]
   end
   def ratings
-    params[:ratings]&.keys || Movie.all_ratings
+    params[:ratings]&.keys || session[:ratings] || Movie.all_ratings
   end
 
   def ratings_hash
